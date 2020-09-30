@@ -1,0 +1,72 @@
+version: '2'
+services:
+  sparc:
+    image: my_sparc_request
+    ports:
+      - "3000:3000"
+    environment:
+      # from Rails & SPARCRequest source (see sparc-request/.env.example)
+      - RAILS_ENV
+      - site_name
+      - SPARC_VERSION
+      - sparc_version=SPARC_VERSION
+      - institution
+      - time_zone
+      - TZ
+      - SQL_MODE
+      - use_short_interaction
+      - sender_address
+      - DEFAULT_HOME_COLUMNS
+      - ROOT_URL
+      - USE_COMPILED_ASSETS
+      - SPARC_DB_USER
+      - SPARC_DB_NAME
+      - SPARC_DB_HOST
+      - SPARC_DB_PASS=MYSQL_PASSWORD
+      - SPARC_MAILER_HOST
+      - SPARC_MAILER_SMTP_ADDRESS
+    volumes:
+      - ./docker/sparc/uploads:/sparc/public/system
+      - ./docker/sparc/logs:/sparc/log
+      - ./docker/sparc/assets:/sparc/public/assets
+  sparcdelayedjob:
+    image: my_sparc_request
+    command: ["rails", "jobs:work"]
+    stdin_open: true
+    tty: true
+    restart: always
+    environment:
+      - RAILS_ENV
+      - site_name
+      - SPARC_VERSION
+      - sparc_version=SPARC_VERSION
+      - institution
+      - time_zone
+      - TZ
+      - SQL_MODE
+      - use_short_interaction
+      - sender_address
+      - DEFAULT_HOME_COLUMNS
+      - ROOT_URL
+      - USE_COMPILED_ASSETS
+      # used by the database.yml
+      - SPARC_DB_USER
+      - SPARC_DB_NAME
+      - SPARC_DB_HOST
+      - SPARC_DB_PASS=MYSQL_PASSWORD
+      - SPARC_MAILER_HOST
+      - SPARC_MAILER_SMTP_ADDRESS
+    volumes:
+      - ./docker/sparcdelayedjob/logs:/sparc/log
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      # The default database for the container should be 'sparc'.
+      - MYSQL_USER=sparc
+      - MYSQL_DATABASE=sparc
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+    volumes:
+      - ./mysql_data:/var/lib/mysql

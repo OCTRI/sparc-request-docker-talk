@@ -1,0 +1,34 @@
+# SPARCRequest Base Image
+#
+# Runs vanilla SPARCRequest using the default Rails application server (Puma)
+#
+# To build:
+# docker build --rm -t my_sparc_request_base:TAG_NAME --pull .
+FROM ruby:2.5
+
+ARG SPARC_VERSION=3.7.1
+ENV LANG=en_US.UTF-8 SPARC_VERSION=$SPARC_VERSION
+
+# Add dependencies for Rails and the Paperclip gem
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && \
+    apt-get install -y \
+    ghostscript \
+    imagemagick \
+    yarn \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -L -o sparc-request.tgz https://github.com/sparc-request/sparc-request/archive/release-${SPARC_VERSION}.tar.gz && \
+  tar xvf sparc-request.tgz && \
+  mv sparc-request-release-${SPARC_VERSION} /sparc && \
+  rm sparc-request.tgz
+
+WORKDIR /sparc
+
+RUN gem install bundler && \
+    bundle install --without="development test" && \
+    yarn install
+
+EXPOSE 3000
+CMD ["rails", "s", "-b", "0.0.0.0"]
