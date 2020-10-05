@@ -13,14 +13,14 @@ ENV LANG=en_US.UTF-8 SPARC_VERSION=$SPARC_VERSION
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
-    apt-get install -y \
-    ghostscript \
-    imagemagick \
-    yarn \
-    && rm -rf /var/lib/apt/lists/*
+    apt-get install -y -q \
+      ghostscript \
+      imagemagick \
+      yarn && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN curl -L -o sparc-request.tgz https://github.com/sparc-request/sparc-request/archive/release-${SPARC_VERSION}.tar.gz && \
-  tar xvf sparc-request.tgz && \
+RUN curl -s -L -o sparc-request.tgz https://github.com/sparc-request/sparc-request/archive/release-${SPARC_VERSION}.tar.gz && \
+  tar zxf sparc-request.tgz && \
   mv sparc-request-release-${SPARC_VERSION} /sparc && \
   rm sparc-request.tgz
 

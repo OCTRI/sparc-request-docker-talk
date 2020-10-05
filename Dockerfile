@@ -8,6 +8,7 @@
 FROM my_sparc_request_base
 
 COPY ./deps/sparc/config/* /sparc/config/
+COPY ./deps/sparc/config/environments/* /sparc/config/environments/
 
 # The following are typical files that you may wish to add if you have customizations
 # COPY ./deps/sparc/assets/images/my_logo.jpg /sparc/app/assets/images/logos/my_logo.jpg

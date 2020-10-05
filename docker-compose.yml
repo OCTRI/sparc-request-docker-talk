@@ -22,7 +22,7 @@ services:
       - SPARC_DB_USER
       - SPARC_DB_NAME
       - SPARC_DB_HOST
-      - SPARC_DB_PASS=MYSQL_PASSWORD
+      - SPARC_DB_PASS=$MYSQL_PASSWORD
       - SPARC_MAILER_HOST
       - SPARC_MAILER_SMTP_ADDRESS
     volumes:
@@ -53,7 +53,7 @@ services:
       - SPARC_DB_USER
       - SPARC_DB_NAME
       - SPARC_DB_HOST
-      - SPARC_DB_PASS=MYSQL_PASSWORD
+      - SPARC_DB_PASS=$MYSQL_PASSWORD
       - SPARC_MAILER_HOST
       - SPARC_MAILER_SMTP_ADDRESS
     volumes:
